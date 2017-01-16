@@ -1,5 +1,6 @@
 package arlyon.felling.enchantment;
 
+import arlyon.felling.Constants;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -25,7 +26,7 @@ public class FellingEventHandler {
         World world = event.getWorld();
         BlockPos pos = event.getPos();
         IBlockState state = event.getState();
-        if (EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByID(11), item)==1 && state.getBlock() == Blocks.LOG) {
+        if (EnchantmentHelper.getEnchantmentLevel(Constants.felling, item)==1 && state.getBlock() == Blocks.LOG) {
             fellTree(state, pos, world, item, player);
         }
     }

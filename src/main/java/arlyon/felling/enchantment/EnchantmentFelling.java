@@ -22,8 +22,8 @@ public class EnchantmentFelling extends Enchantment
     public EnchantmentFelling(Rarity rarityIn, EntityEquipmentSlot... slots)
     {
         super(rarityIn, AXE, slots);
-        this.setName("felling");
-        this.setRegistryName("felling");
+        setName("felling");
+        setRegistryName("felling");
     }
 
     /**
