@@ -8,19 +8,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class EnchantmentFelling extends Enchantment
-{
+public class EnchantmentFelling extends Enchantment {
 
-    private static Predicate<Item> axe_test = new Predicate<Item>() {
-        @Override public boolean apply(Item item) {
+    private static Predicate<Item> isAxe = new Predicate<Item>() {
+        @Override
+        public boolean apply(Item item) {
             return item instanceof ItemAxe;
         }
     };
 
-    private static EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", axe_test);
+    private static EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", isAxe);
 
-    public EnchantmentFelling(Rarity rarityIn, EntityEquipmentSlot... slots)
-    {
+    public EnchantmentFelling(Rarity rarityIn, EntityEquipmentSlot... slots) {
         super(rarityIn, AXE, slots);
         setName("felling");
         setRegistryName("felling");
@@ -28,25 +27,23 @@ public class EnchantmentFelling extends Enchantment
 
     /**
      * Returns the minimal value of enchantability needed on the enchantment level passed.
+     *
+     * Felling I - 20
+     * Felling II - 35
      */
-    public int getMinEnchantability(int enchantmentLevel)
-    {
-        return 25;
-    }
+    public int getMinEnchantability(int enchantmentLevel) { return 5 + (enchantmentLevel) * 15; }
 
     /**
      * Returns the maximum value of enchantability needed on the enchantment level passed.
      */
-    public int getMaxEnchantability(int enchantmentLevel)
-    {
-        return this.getMinEnchantability(enchantmentLevel) + 75;
+    public int getMaxEnchantability(int enchantmentLevel) {
+        return this.getMinEnchantability(enchantmentLevel) + 50;
     }
 
     /**
      * Returns the maximum level that the enchantment can have.
      */
-    public int getMaxLevel()
-    {
-        return 1;
+    public int getMaxLevel() {
+        return 2;
     }
 }

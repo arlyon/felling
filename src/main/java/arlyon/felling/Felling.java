@@ -10,13 +10,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = Constants.MODID, name = Constants.MOD_NAME, version = Constants.VERSION)
 public class Felling {
 
-    @SidedProxy(clientSide="arlyon.felling.proxy.ProxyClient", serverSide="arlyon.felling.proxy.ProxyServer")
+    @SidedProxy(clientSide = "arlyon.felling.proxy.ProxyClient", serverSide = "arlyon.felling.proxy.ProxyServer")
     public static ProxyCommon proxy;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent e) {
-        this.proxy.preInit(e);
-    }
+    public void preInit(FMLPreInitializationEvent e) { this.proxy.preInit(e); }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent e) {
