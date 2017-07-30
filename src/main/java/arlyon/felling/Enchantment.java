@@ -1,18 +1,17 @@
-package arlyon.felling.enchantment;
+package arlyon.felling;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class EnchantmentFelling extends Enchantment {
+public class Enchantment extends net.minecraft.enchantment.Enchantment {
 
     // creates a new enchantment type called axe that can be applied on any tool with the class axe.
     private static EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", item -> item.getToolClasses(new ItemStack(item)).stream().anyMatch(toolClass -> toolClass.equals("axe")));
 
-    public EnchantmentFelling(Rarity rarityIn, EntityEquipmentSlot... slots) {
+    public Enchantment(Rarity rarityIn, EntityEquipmentSlot... slots) {
         super(rarityIn, AXE, slots);
         setName("felling");
         setRegistryName("felling");
