@@ -1,28 +1,22 @@
 package arlyon.felling.enchantment;
 
-import com.google.common.base.Predicate;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 
 public class EnchantmentFelling extends Enchantment {
 
-    private static Predicate<Item> isAxe = new Predicate<Item>() {
-        @Override
-        public boolean apply(Item item) {
-            return item instanceof ItemAxe;
-        }
-    };
-
-    private static EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", isAxe);
+    // creates a new enchantment type called axe that can be applied on any tool with the class axe.
+    private static EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", item -> item.getToolClasses(new ItemStack(item)).stream().anyMatch(toolClass -> toolClass.equals("axe")));
 
     public EnchantmentFelling(Rarity rarityIn, EntityEquipmentSlot... slots) {
         super(rarityIn, AXE, slots);
         setName("felling");
         setRegistryName("felling");
+        CreativeTabs.TOOLS.setRelevantEnchantmentTypes(EnumEnchantmentType.ALL, EnumEnchantmentType.DIGGER, EnumEnchantmentType.FISHING_ROD, EnumEnchantmentType.BREAKABLE, AXE);
     }
 
     /**

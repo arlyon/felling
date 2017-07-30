@@ -703,18 +703,18 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Alexander Lyon/.gradle/caches/minecraft/net/minecraftforge/forge/1.11.2-13.20.0.2294/snapshot/20161220/forgeSrc-1.11.2-13.20.0.2294.jar!/"/>
+          <root url="jar://C:/Users/Alexander Lyon/.gradle/caches/minecraft/net/minecraftforge/forge/1.11.2-13.20.1.2425/snapshot/20161220/forgeSrc-1.11.2-13.20.1.2425.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar://C:/Users/Alexander Lyon/.gradle/caches/minecraft/net/minecraftforge/forge/1.11.2-13.20.0.2294/snapshot/20161220/forgeSrc-1.11.2-13.20.0.2294-sources.jar!/"/>
+          <root url="jar://C:/Users/Alexander Lyon/.gradle/caches/minecraft/net/minecraftforge/forge/1.11.2-13.20.1.2425/snapshot/20161220/forgeSrc-1.11.2-13.20.1.2425-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="file://C:/Users/Alexander Lyon/.gradle/caches/minecraft/net/minecraftforge/forge/1.11.2-13.20.0.2294/start"/>
+          <root url="file://C:/Users/Alexander Lyon/.gradle/caches/minecraft/net/minecraftforge/forge/1.11.2-13.20.1.2425/start"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
