@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -133,7 +134,7 @@ public class EventHandler {
             blockState.getBlock().dropBlockAsItem(world, blockPosition, blockState, 0);
 
             // damage the tool, and if it is broken, return false (which signifies we should halt operation)
-            if (mainHandItem.attemptDamageItem(treePart == TreePart.LEAF ? Configuration.durabilityDamage * Configuration.leafMultiplier / 100 : Configuration.durabilityDamage, new Random())) {
+            if (mainHandItem.attemptDamageItem(treePart == TreePart.LEAF ? Configuration.durabilityDamage * Configuration.leafMultiplier / 100 : Configuration.durabilityDamage, new Random(), (EntityPlayerMP)thePlayer)) {
                 thePlayer.inventory.deleteStack(mainHandItem);
                 return false;
             }
