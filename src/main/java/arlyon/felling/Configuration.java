@@ -17,6 +17,14 @@ public class Configuration {
     @Config.Comment("Determines whether or not leaves should be included when the enchantment cuts down a tree.")
     public static boolean cutLeaves = false;
 
+    @Config.Name("Disable When Crouching")
+    @Config.Comment("When true, the enchantment won't take effect when crouched.")
+    public static boolean disableWhenCrouched = true;
+
+    @Config.Name("Disable When Standing")
+    @Config.Comment("When true, the enchantment won't take effect when stood up.")
+    public static boolean disableWhenStanding = false;
+
     @Config.Name("Felling Durability Cost")
     @Config.Comment("Controls how much damage is done to the axe per log when the enchantment topples a tree.")
     @Config.RangeInt(min=0, max=5)

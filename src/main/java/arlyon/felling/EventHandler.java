@@ -99,7 +99,7 @@ public class EventHandler {
             }
 
             // sneaking players break blocks normally
-            if (thePlayer.isSneaking()) {
+            if ((thePlayer.isSneaking() && Configuration.disableWhenCrouched) || (!thePlayer.isSneaking() && Configuration.disableWhenStanding)) {
                 return;
             }
 
