@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Created by Alexander Lyon on 30.07.2017.
+ *
+ * Controls the configurable options in the mod config menu.
  */
 
 @Config(modid = Constants.MODID)
@@ -34,6 +36,11 @@ public class Configuration {
     @Config.Comment("Controls the amount of damage that cutting leaves causes to your axe in relation to the value set for logs. The max (200%) is double durability damage compared to normal logs, with 0% being no damage.")
     @Config.RangeInt(min=0, max=200)
     public static int leafMultiplier = 100;
+
+    @Config.Name("Rarity (%)")
+    @Config.Comment("Controls how rare the enchantment is (with 100% being as the mod was intended). It is recommended to keep it between 80% and 120%, and more statistics can be found on the wiki.")
+    @Config.RangeInt(min=0, max=200)
+    public static int enchantmentRarity = 100;
 
     @Mod.EventBusSubscriber
     private static class EventHandler {

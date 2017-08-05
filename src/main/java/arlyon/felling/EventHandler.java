@@ -19,13 +19,19 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.Random;
 
 /**
- * Handles the destroying of trees with the felling enchantment.
+ * The event handler container for both the FellingEvent and the RegistryEvent
  */
-
 public class EventHandler {
+
+    /**
+     * The felling event subscriber class, which contains all the required functions for the subscriber.
+     */
     @Mod.EventBusSubscriber(modid = Constants.MODID)
     public static class FellingEventHandler {
 
+        /**
+         * Used to determine which part of the tree a block is.
+         */
         private enum TreePart {
             LEAF,
             LOG,
@@ -81,6 +87,11 @@ public class EventHandler {
          */
         @SubscribeEvent
         public static void fellTreeSubscriber(BlockEvent.BreakEvent event) {
+
+            if (event.getWorld().isRemote) {
+                return;
+            }
+
             EntityPlayer thePlayer = event.getPlayer();
             ItemStack mainHandItem = thePlayer.getHeldItemMainhand();
             int enchantmentLevel = EnchantmentHelper.getEnchantmentLevel(Constants.felling, mainHandItem);
