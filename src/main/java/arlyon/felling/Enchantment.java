@@ -8,37 +8,49 @@ import net.minecraftforge.common.util.EnumHelper;
 
 import java.util.Arrays;
 
+/**
+ * The enchantment class for the Felling enchantment.
+ */
 public class Enchantment extends net.minecraft.enchantment.Enchantment {
 
-    // creates a new enchantment type called axe that can be applied on any tool with the class axe.
-    private static EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", item -> item.getToolClasses(new ItemStack(item)).stream().anyMatch(toolClass -> toolClass.equals("axe")));
+    /**
+     * Axe enchantment type.
+     */
+    public static EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", item -> {
+        assert item != null;
+        return item.getToolClasses(new ItemStack(item)).stream().anyMatch(toolClass -> toolClass.equals("axe"));
+    });
 
-    public Enchantment(Rarity rarityIn, EntityEquipmentSlot... slots) {
+    /**
+     * Sets name and registry name and assigns the proper predicate.
+     *
+     * @param rarityIn the rarity of the enchantment
+     * @param slots the slots in which the enchantment is valid
+     */
+    Enchantment(Rarity rarityIn, EntityEquipmentSlot... slots) {
         super(rarityIn, AXE, slots);
         setName("felling");
         setRegistryName("felling");
-
-        // add it to the creative tab
-        EnumEnchantmentType[] enchantmentTypes = CreativeTabs.TOOLS.getRelevantEnchantmentTypes();
-        enchantmentTypes = Arrays.copyOf(enchantmentTypes, enchantmentTypes.length+1);
-        enchantmentTypes[enchantmentTypes.length-1] = AXE;
-
-        CreativeTabs.TOOLS.setRelevantEnchantmentTypes(enchantmentTypes);
     }
 
     /**
-     * Returns the minimal value of enchantability needed on the enchantment level passed.
-     *
      * Felling I - 20
      * Felling II - 35
+     *
+     * @param enchantmentLevel The level you want to get minimum enchantability weight for.
+     * @return Minimus value of enchantability for the given enchantment level.
      */
-    public int getMinEnchantability(int enchantmentLevel) { return 5 + (enchantmentLevel) * 15; }
+    public int getMinEnchantability(int enchantmentLevel) { return ((5 + (enchantmentLevel) * 15) * Configuration.enchantmentRarity) / 100; }
 
     /**
-     * Returns the maximum value of enchantability needed on the enchantment level passed.
+     * Felling I - 35
+     * Felling II - 50
+     *
+     * @param enchantmentLevel The level you want to get maximun enchantability weight for.
+     * @return Maximum value of enchantability for the given enchantment level.
      */
     public int getMaxEnchantability(int enchantmentLevel) {
-        return this.getMinEnchantability(enchantmentLevel) + 50;
+        return this.getMinEnchantability(enchantmentLevel) + 15;
     }
 
     /**
