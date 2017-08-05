@@ -6,6 +6,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 
+import java.util.Arrays;
+
 public class Enchantment extends net.minecraft.enchantment.Enchantment {
 
     // creates a new enchantment type called axe that can be applied on any tool with the class axe.
@@ -15,7 +17,13 @@ public class Enchantment extends net.minecraft.enchantment.Enchantment {
         super(rarityIn, AXE, slots);
         setName("felling");
         setRegistryName("felling");
-        CreativeTabs.TOOLS.setRelevantEnchantmentTypes(EnumEnchantmentType.ALL, EnumEnchantmentType.DIGGER, EnumEnchantmentType.FISHING_ROD, EnumEnchantmentType.BREAKABLE, AXE);
+
+        // add it to the creative tab
+        EnumEnchantmentType[] enchantmentTypes = CreativeTabs.TOOLS.getRelevantEnchantmentTypes();
+        enchantmentTypes = Arrays.copyOf(enchantmentTypes, enchantmentTypes.length+1);
+        enchantmentTypes[enchantmentTypes.length-1] = AXE;
+
+        CreativeTabs.TOOLS.setRelevantEnchantmentTypes(enchantmentTypes);
     }
 
     /**
