@@ -10,6 +10,6 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 public class PlayerLoginEventHandler {
     @SubscribeEvent
     public void registerPlayerSettings(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        PacketHandler.INSTANCE.sendToServer(new MyMessage(Configuration.disableWhenCrouched, Configuration.disableWhenStanding));
+        PacketHandler.INSTANCE.sendToServer(new MyMessage(Configuration.clientSide.disableWhenCrouched, Configuration.clientSide.disableWhenStanding));
     }
 }

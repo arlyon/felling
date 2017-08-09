@@ -164,7 +164,7 @@ public class EnchantmentEventHandler {
     }
 
     private static boolean treePartShouldBreak(BlockType blockType) {
-        return Configuration.cutLeaves ? blockType == BlockType.LOG || blockType == BlockType.LEAF : blockType == BlockType.LOG;
+        return Configuration.serverSide.cutLeaves ? blockType == BlockType.LOG || blockType == BlockType.LEAF : blockType == BlockType.LOG;
     }
 
     private static EnumFacing[][] getPaths(BlockEvent.BreakEvent event) {
@@ -222,6 +222,6 @@ public class EnchantmentEventHandler {
     }
 
     private static boolean toolBreaksWhenDamaged(EntityPlayerMP thePlayer, ItemStack theTool, BlockType treePart) {
-        return theTool.attemptDamageItem(treePart == BlockType.LEAF ? Configuration.durabilityDamage * Configuration.leafMultiplier / 100 : Configuration.durabilityDamage, new Random(), thePlayer);
+        return theTool.attemptDamageItem(treePart == BlockType.LEAF ? Configuration.serverSide.durabilityDamage * Configuration.serverSide.leafMultiplier / 100 : Configuration.serverSide.durabilityDamage, new Random(), thePlayer);
     }
 }

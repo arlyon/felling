@@ -3,6 +3,9 @@ version 1.3.0
     - create a new tier called felling 3 to include corners
     - completely refactor code in the felling subscriber (omg its so clean)
     - add support for IC2 rubber wood
+    - properly send clientside settings to the server to respect whether
+      the enchantment should be enabled when standing/sneaking
+    - rework settings to clarify new serverside/clientside settings
 
 version 1.2.3
 

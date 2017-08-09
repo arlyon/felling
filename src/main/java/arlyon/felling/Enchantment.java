@@ -41,7 +41,7 @@ public class Enchantment extends net.minecraft.enchantment.Enchantment {
      * @param enchantmentLevel The level you want to get minimum enchantability weight for.
      * @return Minimus value of enchantability for the given enchantment level.
      */
-    public int getMinEnchantability(int enchantmentLevel) { return ((5 + (enchantmentLevel) * 10) * Configuration.enchantmentRarity) / 100; }
+    public int getMinEnchantability(int enchantmentLevel) { return ((5 + (enchantmentLevel) * 10) * Configuration.serverSide.enchantmentRarity) / 100; }
 
     /**
      * Felling I - 25
