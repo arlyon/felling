@@ -17,30 +17,30 @@ public class Configuration {
 
     @Config.Name("Include Leaves")
     @Config.Comment("Determines whether or not leaves should be included when the enchantment cuts down a tree. Convenient however can cause Stack Overflow errors in jungles.")
-    static boolean cutLeaves = false;
+    public static boolean cutLeaves = false;
 
     @Config.Name("Disable When Crouching")
     @Config.Comment("When true, the enchantment won't take effect when crouched.")
-    static boolean disableWhenCrouched = true;
+    public static boolean disableWhenCrouched = true;
 
     @Config.Name("Disable When Standing")
     @Config.Comment("When true, the enchantment won't take effect when stood up.")
-    static boolean disableWhenStanding = false;
+    public static boolean disableWhenStanding = false;
 
     @Config.Name("Felling Durability Cost")
     @Config.Comment("Controls how much damage is done to the axe per log when the enchantment topples a tree.")
     @Config.RangeInt(min=0, max=5)
-    static int durabilityDamage = 2;
+    public static int durabilityDamage = 2;
 
     @Config.Name("Leaf Cost Multiplier")
     @Config.Comment("Controls the amount of damage that cutting leaves causes to your axe in relation to the value set for logs. The max (200%) is double durability damage compared to normal logs, with 0% being no damage.")
     @Config.RangeInt(min=0, max=200)
-    static int leafMultiplier = 100;
+    public static int leafMultiplier = 100;
 
     @Config.Name("Rarity (%)")
     @Config.Comment("Controls how rare the enchantment is (with 100% being as the mod was intended). It is recommended to keep it between 80% and 120%, and more statistics can be found on the wiki.")
     @Config.RangeInt(min=0, max=200)
-    static int enchantmentRarity = 100;
+    public static int enchantmentRarity = 100;
 
     @Mod.EventBusSubscriber
     private static class EventHandler {
