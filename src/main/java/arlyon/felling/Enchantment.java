@@ -34,29 +34,31 @@ public class Enchantment extends net.minecraft.enchantment.Enchantment {
     }
 
     /**
-     * Felling I - 20
-     * Felling II - 35
+     * Felling I - 15
+     * Felling II - 25
+     * Felling III - 35
      *
      * @param enchantmentLevel The level you want to get minimum enchantability weight for.
      * @return Minimus value of enchantability for the given enchantment level.
      */
-    public int getMinEnchantability(int enchantmentLevel) { return ((5 + (enchantmentLevel) * 15) * Configuration.enchantmentRarity) / 100; }
+    public int getMinEnchantability(int enchantmentLevel) { return ((5 + (enchantmentLevel) * 10) * Configuration.enchantmentRarity) / 100; }
 
     /**
-     * Felling I - 35
-     * Felling II - 50
+     * Felling I - 25
+     * Felling II - 35
+     * Felling III - 45
      *
      * @param enchantmentLevel The level you want to get maximun enchantability weight for.
      * @return Maximum value of enchantability for the given enchantment level.
      */
     public int getMaxEnchantability(int enchantmentLevel) {
-        return this.getMinEnchantability(enchantmentLevel) + 15;
+        return this.getMinEnchantability(enchantmentLevel) + 10;
     }
 
     /**
      * Returns the maximum level that the enchantment can have.
      */
     public int getMaxLevel() {
-        return 2;
+        return 3;
     }
 }

@@ -1,4 +1,10 @@
-version 1.2.
+version 1.2.4
+
+    - create a new tier called felling 3 to include corners
+    - completely refactor code in the felling subscriber (omg its so clean)
+    
+
+version 1.2.3
 
     - fix serverside and clientside
     - add rarity setting
