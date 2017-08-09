@@ -1,12 +1,18 @@
 package arlyon.felling.packets;
 
+import arlyon.felling.Constants;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MyMessage implements IMessage {
 
@@ -37,12 +43,12 @@ public class MyMessage implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<MyMessage, IMessage> {
+
         @Override
         public IMessage onMessage(MyMessage message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // youre 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things here.
-            System.out.println("HOLY SHIT");
             FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
             return null;
         }
@@ -50,7 +56,12 @@ public class MyMessage implements IMessage {
         private void handle(MyMessage message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
-            playerEntity.mcServer.sendMessage(new TextComponentString("Standing: " + message.disableWhenCrouched+ ", Crouched: " + message.disableWhenStanding));
+            Constants.playerSettings.put(playerEntity.getGameProfile().hashCode(), new PlayerSettings(message.disableWhenCrouched, message.disableWhenStanding));
+
+            playerEntity.sendMessage(new TextComponentString(
+                    "Registered Felling Settings with Server: \n" +
+                          "   Standing - " + message.disableWhenStanding + " \n" +
+                          "   Crouched - " + message.disableWhenCrouched));
         }
     }
 

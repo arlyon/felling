@@ -1,5 +1,8 @@
-package arlyon.felling;
+package arlyon.felling.events;
 
+import arlyon.felling.Configuration;
+import arlyon.felling.Constants;
+import arlyon.felling.packets.PlayerSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -8,11 +11,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.Map;
 import java.util.Random;
 
 public class EnchantmentEventHandler {
@@ -133,7 +138,21 @@ public class EnchantmentEventHandler {
     }
 
     private boolean configAllowsBreak(BlockEvent.BreakEvent event) {
-        return (event.getPlayer().isSneaking() && !Configuration.disableWhenCrouched) || (!event.getPlayer().isSneaking() && !Configuration.disableWhenStanding);
+
+        PlayerSettings playerSettings = getOrCreatePlayerSettings(event.getPlayer());
+        return (event.getPlayer().isSneaking() && !playerSettings.disableWhenCrouched) || (!event.getPlayer().isSneaking() && !playerSettings.disableWhenStanding);
+
+    }
+
+    private PlayerSettings getOrCreatePlayerSettings(EntityPlayer thePlayer) {
+        PlayerSettings playerSettings = Constants.playerSettings.get(thePlayer.getGameProfile().hashCode());
+
+        if (playerSettings == null) {
+            playerSettings = new PlayerSettings(true, true);
+            thePlayer.sendMessage(new TextComponentString("Your Felling settings aren't synced with the server. Please update the settings in the mod config to resend them."));
+        }
+
+        return playerSettings;
     }
 
     private boolean eventIsServerside(BlockEvent.BreakEvent event) {

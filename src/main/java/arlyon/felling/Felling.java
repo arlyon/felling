@@ -1,7 +1,10 @@
 package arlyon.felling;
 
+import arlyon.felling.events.EnchantmentEventHandler;
+import arlyon.felling.events.PlayerLoginEventHandler;
+import arlyon.felling.packets.MyMessage;
+import arlyon.felling.packets.PacketHandler;
 import arlyon.felling.proxy.ProxyCommon;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -10,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 @Mod(modid = Constants.MODID, name = Constants.MOD_NAME, version = Constants.VERSION, updateJSON="https://git.arlyon.co/minecraft/Felling/snippets/14/raw")
 public class Felling {
@@ -22,6 +26,7 @@ public class Felling {
         proxy.preInit(e);
 
         MinecraftForge.EVENT_BUS.register(new EnchantmentEventHandler());
+        MinecraftForge.EVENT_BUS.register(new PlayerLoginEventHandler());
     }
 
     @Mod.EventHandler

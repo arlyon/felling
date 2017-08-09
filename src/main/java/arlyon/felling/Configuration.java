@@ -1,5 +1,7 @@
 package arlyon.felling;
 
+import arlyon.felling.packets.MyMessage;
+import arlyon.felling.packets.PacketHandler;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -55,6 +57,8 @@ public class Configuration {
             if (event.getModID().equals(Constants.MODID)) {
                 ConfigManager.sync(Constants.MODID, Config.Type.INSTANCE);
             }
+
+            PacketHandler.INSTANCE.sendToServer(new MyMessage(disableWhenCrouched, disableWhenStanding));
         }
     }
 }
