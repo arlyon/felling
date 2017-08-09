@@ -122,7 +122,14 @@ public class EnchantmentEventHandler {
             if (id == leafID) return BlockType.LEAF;
         }
 
-        return null;
+        return registerIncompatibleBlock(stack) ? getTreePart(stack) : null;
+    }
+
+    private static boolean registerIncompatibleBlock(ItemStack stack) {
+        if (!stack.getUnlocalizedName().matches("^ic2.rubber_wood$")) return false;
+
+        OreDictionary.registerOre("logWood", stack);
+        return true;
     }
 
     private boolean configAllowsBreak(BlockEvent.BreakEvent event) {

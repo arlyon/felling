@@ -1,8 +1,8 @@
-version 1.2.4
+version 1.3.0
 
     - create a new tier called felling 3 to include corners
     - completely refactor code in the felling subscriber (omg its so clean)
-    
+    - add support for IC2 rubber wood
 
 version 1.2.3
 
