@@ -1,6 +1,6 @@
 package arlyon.felling;
 
-import arlyon.felling.packets.MyMessage;
+import arlyon.felling.packets.FellingSettingsMessage;
 import arlyon.felling.packets.PacketHandler;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -9,11 +9,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Created by Alexander Lyon on 30.07.2017.
- *
  * Controls the configurable options in the mod config menu.
  */
-
 @Config(modid = Constants.MODID)
 public class Configuration {
 
@@ -25,6 +22,9 @@ public class Configuration {
     @Config.Comment("These settings are personal to you and apply to all games.")
     public static ClientSide clientSide = new ClientSide();
 
+    /**
+     * The server side settings.
+     */
     public static class ServerSide {
 
         @Config.Name("Include Leaves")
@@ -48,6 +48,9 @@ public class Configuration {
 
     }
 
+    /**
+     * The client side settings.
+     */
     public static class ClientSide {
 
         @Config.Name("Disable When Crouching")
@@ -60,18 +63,27 @@ public class Configuration {
 
     }
 
+    /**
+     * Sets up some event handlers.
+     */
     @Mod.EventBusSubscriber
-    private static class EventHandler {
+    private static class EventSubscriber {
 
+        /**
+         * Saves the config locally and also sends critical values to the server when the config changes.
+         * @param event The config changed event.
+         */
         @SubscribeEvent
         public static void saveConfigOnChange(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(Constants.MODID)) {
                 ConfigManager.sync(Constants.MODID, Config.Type.INSTANCE);
 
                 PacketHandler.INSTANCE.sendToServer(
-                        new MyMessage(
+                        new FellingSettingsMessage(
                                 clientSide.disableWhenCrouched,
-                                clientSide.disableWhenStanding));
+                                clientSide.disableWhenStanding
+                        )
+                );
             }
         }
     }

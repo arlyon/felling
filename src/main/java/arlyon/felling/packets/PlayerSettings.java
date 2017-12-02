@@ -1,5 +1,8 @@
 package arlyon.felling.packets;
 
+/**
+ * A simple class that handles a player's settings on the server.
+ */
 public class PlayerSettings {
     public boolean disableWhenCrouched;
     public boolean disableWhenStanding;
