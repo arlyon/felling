@@ -14,7 +14,13 @@ import org.apache.logging.log4j.Logger;
 /**
  * The primary declaration file for the mod.
  */
-@Mod(modid = Constants.MODID, name = Constants.MOD_NAME, version = Constants.VERSION, updateJSON="https://git.arlyon.co/minecraft/Felling/snippets/14/raw")
+@Mod(
+        modid = Constants.MODID,
+        name = Constants.MOD_NAME,
+        version = Constants.VERSION,
+        updateJSON="https://git.arlyon.co/minecraft/Felling/snippets/14/raw",
+        acceptedMinecraftVersions = "[1.12.0, 1.12.2]" // starting with 1.12, up to 1.12.2
+)
 public class Felling {
 
     @SidedProxy(clientSide = "arlyon.felling.core.proxy.ProxyClient", serverSide = "arlyon.felling.core.proxy.ProxyServer")
