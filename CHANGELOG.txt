@@ -1,3 +1,13 @@
+version 1.3.1
+
+    - improve algorithm to use iteration instead of recursion
+    - fix config errors
+    - implement logging system
+    - fix mod compatibility and general cleanup
+    - add support for biomes o'plenty
+    - rewrite block dropping and xp giving code
+    - added setting for maximum blocks to break
+
 version 1.3.0
 
     - create a new tier called felling 3 to include corners
