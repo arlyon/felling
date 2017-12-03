@@ -16,7 +16,7 @@ public class Enchantment extends net.minecraft.enchantment.Enchantment {
      * An axe enchantment type can be added to a tool
      * if the tool class "axe" exists on the tool.
      */
-    public static EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", item ->
+    public static final EnumEnchantmentType AXE = EnumHelper.addEnchantmentType("AXE", item ->
             item != null &&
             item.getToolClasses(new ItemStack(item)).stream().anyMatch(toolClass -> toolClass.equals("axe"))
     );

@@ -1,6 +1,7 @@
-package arlyon.felling;
+package arlyon.felling.core;
 
-import arlyon.felling.proxy.ProxyCommon;
+import arlyon.felling.Constants;
+import arlyon.felling.core.proxy.ProxyCommon;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -8,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The primary declaration file for the mod.
@@ -15,15 +17,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod(modid = Constants.MODID, name = Constants.MOD_NAME, version = Constants.VERSION, updateJSON="https://git.arlyon.co/minecraft/Felling/snippets/14/raw")
 public class Felling {
 
-    @SidedProxy(clientSide = "arlyon.felling.proxy.ProxyClient", serverSide = "arlyon.felling.proxy.ProxyServer")
+    @SidedProxy(clientSide = "arlyon.felling.core.proxy.ProxyClient", serverSide = "arlyon.felling.core.proxy.ProxyServer")
     private static ProxyCommon proxy;
+
+    public static Logger log;
 
     /**
      * Passes the pre-initialization event onwards to the proxy.
      * @param e The pre-initialization event.
      */
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent e) { proxy.preInit(e); }
+    public void preInit(FMLPreInitializationEvent e) {
+        proxy.preInit(e);
+        log = e.getModLog();
+    }
 
     /**
      * Passes the initialization event onwards to the proxy.

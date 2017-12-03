@@ -1,9 +1,9 @@
 package arlyon.felling.packets;
 
 import arlyon.felling.Constants;
+import arlyon.felling.core.Felling;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -11,8 +11,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class FellingSettingsMessage implements IMessage {
 
-    boolean disableWhenCrouched;
-    boolean disableWhenStanding;
+    private boolean disableWhenCrouched;
+    private boolean disableWhenStanding;
 
     /**
      * A default constructor is required.
@@ -73,12 +73,7 @@ public class FellingSettingsMessage implements IMessage {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             Constants.playerSettings.put(playerEntity.getGameProfile().hashCode(), new PlayerSettings(message.disableWhenCrouched, message.disableWhenStanding));
-
-            playerEntity.sendMessage(new TextComponentString(
-                    "Registered Felling Settings with Server: \n" +
-                          "   Standing - " + message.disableWhenStanding + " \n" +
-                          "   Crouched - " + message.disableWhenCrouched));
+            Felling.log.info(String.format("%s sent client side settings to server.", playerEntity.getName()));
         }
     }
-
 }

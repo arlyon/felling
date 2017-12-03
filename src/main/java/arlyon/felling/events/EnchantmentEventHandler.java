@@ -3,8 +3,8 @@ package arlyon.felling.events;
 import arlyon.felling.Configuration;
 import arlyon.felling.Constants;
 import arlyon.felling.packets.PlayerSettings;
+import arlyon.felling.support.UniqueQueue;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,10 +15,10 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
+
+import static net.minecraft.init.Enchantments.FORTUNE;
 
 public class EnchantmentEventHandler {
 
@@ -33,7 +33,7 @@ public class EnchantmentEventHandler {
     /**
      * The paths for felling one, to reach up and down.
      */
-    private static EnumFacing[][] firstTierPaths = {
+    private static final EnumFacing[][] firstTierPaths = {
             // up and down
             {EnumFacing.UP},
             {EnumFacing.DOWN}
@@ -42,7 +42,7 @@ public class EnchantmentEventHandler {
     /**
      * The paths for felling two, to reach all adjacent blocks.
      */
-    private static EnumFacing[][] secondTierPaths = {
+    private static final EnumFacing[][] secondTierPaths = {
             // adjacent
             firstTierPaths[0],
             firstTierPaths[1],
@@ -55,7 +55,7 @@ public class EnchantmentEventHandler {
     /**
      * The paths for felling three, to reach adjacent blocks including diagonals.
      */
-    private static EnumFacing[][] thirdTierPaths = {
+    private static final EnumFacing[][] thirdTierPaths = {
             // adjacent
             secondTierPaths[0],
             secondTierPaths[1],
@@ -82,14 +82,11 @@ public class EnchantmentEventHandler {
     /**
      * Array of all the paths for each of the three felling levels.
      */
-    private static EnumFacing[][][] fellingPaths = {
+    private static final EnumFacing[][][] fellingPaths = {
             firstTierPaths,
             secondTierPaths,
             thirdTierPaths,
     };
-
-    private static int logID = OreDictionary.getOreID("logWood");
-    private static int leafID = OreDictionary.getOreID("treeLeaves");
 
     /**
      * Listens to block break events and checks to see if
@@ -122,7 +119,6 @@ public class EnchantmentEventHandler {
      */
     private void startFelling(BlockEvent.BreakEvent currentEvent) {
         fellingAlgorithm(
-                currentEvent.getState(),
                 currentEvent.getPos(),
                 currentEvent.getWorld(),
                 currentEvent.getPlayer(),
@@ -137,36 +133,12 @@ public class EnchantmentEventHandler {
      * @return The block type.
      */
     private static BlockType getTreePart(Block block) {
-        return getTreePart(new ItemStack(block, 1));
-    }
-
-    /**
-     * Gets the block type of the item stack.
-     *
-     * @param stack the stack to test.
-     * @return The block type.
-     */
-    private static BlockType getTreePart(ItemStack stack) {
-        if (stack.isEmpty()) return null;
-
-        int[] blockIDs = OreDictionary.getOreIDs(stack);
-
-        return Arrays.stream(blockIDs)
-                .filter(id -> id == logID || id == leafID)
-                .mapToObj(id -> id == logID ? BlockType.LOG : BlockType.LEAF)
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * Registers blocks that don't follow conventions on a case-by-base basis.
-     *
-     * @param stack The item stack to register.
-     */
-    private static void registerIncompatibleBlocks(ItemStack stack) {
-        if (stack.getUnlocalizedName().matches("^ic2.rubber_wood$")) {
-            OreDictionary.registerOre("logWood", stack);
-        }
+        if (block.isWood(null, null))
+            return BlockType.LOG;
+        else if (block.isLeaves(block.getDefaultState(), null, null))
+            return BlockType.LEAF;
+        else
+            return null;
     }
 
     /**
@@ -211,7 +183,7 @@ public class EnchantmentEventHandler {
     }
 
     /**
-     * A simple check to see if the player that caused the break event has the enchantment in their mainhand.
+     * A simple check to see if the player that caused the break event has the enchantment in their main hand.
      *
      * @param event The block break event.
      * @return Whether the player's main hand is enchanted.
@@ -245,42 +217,51 @@ public class EnchantmentEventHandler {
      * Breaks the block at a given position and then for
      * each path continues felling on that block as well.
      *
-     * @param blockState    The state of the block.
      * @param blockPosition The position of the block.
      * @param world         The world.
      * @param thePlayer     The player.
      * @param treePart      The tree part.
      * @param paths         The paths to fell.
      */
-    private static void fellingAlgorithm(IBlockState blockState, BlockPos blockPosition, World world, EntityPlayer thePlayer, BlockType treePart, EnumFacing[][] paths) {
-        // try to break the block and if it fails then return
+    private static void fellingAlgorithm(BlockPos blockPosition, World world, EntityPlayer thePlayer, BlockType treePart, EnumFacing[][] paths) {
+        Queue<BlockPos> blocks = new UniqueQueue<>();
+        blocks.add(blockPosition);
+        int blocksBroken = 0;
 
-        breakBlock(blockState, blockPosition, world, thePlayer);
-        if (mainHandBreaksWhenDamaged(thePlayer, treePart)) return;
+        while (blocks.size() > 0 && (Configuration.serverSide.maxBlocks == 0 || blocksBroken <= Configuration.serverSide.maxBlocks)) {
+            blockPosition = blocks.remove(); // next block
 
-        // for each path passed in, travel to the block and test it
-        for (EnumFacing[] path : paths) {
-            continueFelling(blockPosition, world, thePlayer, paths, path);
+            breakBlock(blockPosition, world, thePlayer); // break
+            if (mainHandBreaksWhenDamaged(thePlayer, treePart)) return; // damage
+
+            getSurroundingBlocks(blockPosition, world, paths).forEach(blocks::offer);
+            blocksBroken += 1;
         }
     }
 
     /**
-     * Given a path, follows it and calls felling algorithm again.
+     * Checks all the blocks reached from the list of paths and checks
+     * if they are valid breaks before returning the lost of all valid.
      *
-     * @param currentBlockPosition The current position.
-     * @param world                The world.
-     * @param thePlayer            The player.
-     * @param paths                The list of paths.
-     * @param pathToFollow         The path to follow to get to the next block.
+     * @param startPosition The starting position.
+     * @param world         The world.
+     * @param paths         The list of paths.
+     * @return The block positions that are valid blocks to break.
      */
-    private static void continueFelling(BlockPos currentBlockPosition, World world, EntityPlayer thePlayer, EnumFacing[][] paths, EnumFacing[] pathToFollow) {
+    private static Collection<BlockPos> getSurroundingBlocks(BlockPos startPosition, World world, EnumFacing[][] paths) {
+        // for each path passed in, travel to the block and test it
+        Queue<BlockPos> newBlocks = new LinkedList<>();
 
-        BlockPos nextBlockPosition = travelToBlock(currentBlockPosition, pathToFollow);
-        IBlockState nextBlockState = world.getBlockState(nextBlockPosition);
-        BlockType nextTreePart = getTreePart(nextBlockState.getBlock());
+        for (EnumFacing[] pathToFollow : paths) {
+            BlockPos nextBlockPosition = travelToBlock(startPosition, pathToFollow);
+            BlockType nextTreePart = getTreePart(world.getBlockState(nextBlockPosition).getBlock());
 
-        if (treePartShouldBreak(nextTreePart))
-            fellingAlgorithm(world.getBlockState(nextBlockPosition), nextBlockPosition, world, thePlayer, nextTreePart, paths);
+            if (treePartShouldBreak(nextTreePart)) {
+                newBlocks.add(nextBlockPosition);
+            }
+        }
+
+        return newBlocks;
     }
 
     /**
@@ -297,16 +278,28 @@ public class EnchantmentEventHandler {
     /**
      * Given a position, sets the block to air and drops the item.
      *
-     * @param blockState    The state.
      * @param blockPosition The position.
      * @param world         The world.
      * @param thePlayer     The player.
      */
-    private static void breakBlock(IBlockState blockState, BlockPos blockPosition, World world, EntityPlayer thePlayer) {
+    private static void breakBlock(BlockPos blockPosition, World world, EntityPlayer thePlayer) {
+        if (!thePlayer.capabilities.isCreativeMode) {
+            int fortune = EnchantmentHelper.getEnchantmentLevel(FORTUNE, thePlayer.getHeldItemMainhand());
+
+            world.getBlockState(blockPosition).getBlock().dropBlockAsItem(world, blockPosition, world.getBlockState(blockPosition), fortune); // drop the block
+            world.getBlockState(blockPosition).getBlock().dropXpOnBlockBreak( // drop the xp
+                    world,
+                    blockPosition,
+                    world.getBlockState(blockPosition).getBlock().getExpDrop(
+                            world.getBlockState(blockPosition),
+                            world,
+                            blockPosition,
+                            fortune
+                    )
+            );
+        }
 
         world.setBlockToAir(blockPosition); // delete the block
-        if (!thePlayer.capabilities.isCreativeMode)
-            blockState.getBlock().dropBlockAsItem(world, blockPosition, blockState, 0); // drop the block
     }
 
     /**

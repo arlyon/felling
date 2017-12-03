@@ -46,6 +46,10 @@ public class Configuration {
         @Config.RangeInt(min=0, max=200)
         public int enchantmentRarity = 100;
 
+        @Config.Name("Maximum Blocks To Break")
+        @Config.Comment("Puts a limit on the number of blocks to break. 0 for no limit.")
+        @Config.RangeInt(min=0)
+        public int maxBlocks = 0;
     }
 
     /**
