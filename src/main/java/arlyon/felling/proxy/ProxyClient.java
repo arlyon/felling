@@ -1,4 +1,4 @@
-package arlyon.felling.core.proxy;
+package arlyon.felling.proxy;
 
 import arlyon.felling.Enchantment;
 import arlyon.felling.events.PlayerLoginEventHandler;
@@ -19,26 +19,33 @@ public class ProxyClient extends ProxyCommon {
     /**
      * Adds the enchantment type to the creative tabs client side,
      * and adds the client side event handler to send the config.
-     * @param e The pre-initialization event.
+     * @param event The pre-initialization event.
      */
     @Override
-    public void preInit(FMLPreInitializationEvent e) {
-        super.preInit(e);
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
 
-        EnumEnchantmentType[] enchantmentTypes = CreativeTabs.TOOLS.getRelevantEnchantmentTypes();
-        enchantmentTypes = Arrays.copyOf(CreativeTabs.TOOLS.getRelevantEnchantmentTypes(), enchantmentTypes.length+1);
-        enchantmentTypes[enchantmentTypes.length-1] = Enchantment.AXE;
-        CreativeTabs.TOOLS.setRelevantEnchantmentTypes(enchantmentTypes);
-
+        addEnchantToCreativeTab();
         MinecraftForge.EVENT_BUS.register(new PlayerLoginEventHandler());
     }
 
     @Override
-    public void init(FMLInitializationEvent e) { super.init(e); }
+    public void init(FMLInitializationEvent e) {
+        super.init(e);
+    }
 
     @Override
     public void postInit(FMLPostInitializationEvent e) {
         super.postInit(e);
     }
 
+    /**
+     * Registers the enchantment in the creative tab.
+     */
+    private void addEnchantToCreativeTab() {
+        EnumEnchantmentType[] enchantmentTypes = CreativeTabs.TOOLS.getRelevantEnchantmentTypes();
+        enchantmentTypes = Arrays.copyOf(CreativeTabs.TOOLS.getRelevantEnchantmentTypes(), enchantmentTypes.length+1);
+        enchantmentTypes[enchantmentTypes.length-1] = Enchantment.AXE;
+        CreativeTabs.TOOLS.setRelevantEnchantmentTypes(enchantmentTypes);
+    }
 }

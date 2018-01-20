@@ -1,8 +1,8 @@
 package arlyon.felling.events;
 
 import arlyon.felling.Configuration;
-import arlyon.felling.Constants;
-import arlyon.felling.packets.PlayerSettings;
+import arlyon.felling.Felling;
+import arlyon.felling.network.PlayerSettings;
 import arlyon.felling.support.UniqueQueue;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -162,7 +162,7 @@ public class EnchantmentEventHandler {
      * TODO maybe move this somewhere else.
      */
     private PlayerSettings getOrCreatePlayerSettings(EntityPlayer thePlayer) {
-        PlayerSettings playerSettings = Constants.playerSettings.get(thePlayer.getGameProfile().hashCode());
+        PlayerSettings playerSettings = Felling.playerSettings.get(thePlayer.getGameProfile().hashCode());
 
         if (playerSettings == null) {
             playerSettings = new PlayerSettings(true, true);
@@ -189,7 +189,7 @@ public class EnchantmentEventHandler {
      * @return Whether the player's main hand is enchanted.
      */
     private boolean mainHandHasEnchantment(BlockEvent.BreakEvent event) {
-        return EnchantmentHelper.getEnchantmentLevel(Constants.felling, event.getPlayer().getHeldItemMainhand()) != 0;
+        return EnchantmentHelper.getEnchantmentLevel(Felling.felling, event.getPlayer().getHeldItemMainhand()) != 0;
     }
 
     /**
@@ -210,7 +210,7 @@ public class EnchantmentEventHandler {
      * @return The list of paths matching the felling enchantment version.
      */
     private static EnumFacing[][] getPaths(BlockEvent.BreakEvent event) {
-        return fellingPaths[EnchantmentHelper.getEnchantmentLevel(Constants.felling, event.getPlayer().getHeldItemMainhand()) - 1];
+        return fellingPaths[EnchantmentHelper.getEnchantmentLevel(Felling.felling, event.getPlayer().getHeldItemMainhand()) - 1];
     }
 
     /**

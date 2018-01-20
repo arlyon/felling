@@ -1,7 +1,7 @@
-package arlyon.felling.core.proxy;
+package arlyon.felling.proxy;
 
 import arlyon.felling.events.EnchantmentEventHandler;
-import arlyon.felling.packets.PacketHandler;
+import arlyon.felling.network.PacketHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;

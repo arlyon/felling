@@ -1,4 +1,4 @@
-package arlyon.felling.packets;
+package arlyon.felling.network;
 
 /**
  * A simple class that handles a player's settings on the server.

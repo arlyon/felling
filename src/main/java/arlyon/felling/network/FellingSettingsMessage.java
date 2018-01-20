@@ -1,7 +1,6 @@
-package arlyon.felling.packets;
+package arlyon.felling.network;
 
-import arlyon.felling.Constants;
-import arlyon.felling.core.Felling;
+import arlyon.felling.Felling;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -72,7 +71,7 @@ public class FellingSettingsMessage implements IMessage {
         private void handle(FellingSettingsMessage message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
-            Constants.playerSettings.put(playerEntity.getGameProfile().hashCode(), new PlayerSettings(message.disableWhenCrouched, message.disableWhenStanding));
+            Felling.playerSettings.put(playerEntity.getGameProfile().hashCode(), new PlayerSettings(message.disableWhenCrouched, message.disableWhenStanding));
             Felling.log.info(String.format("%s sent client side settings to server.", playerEntity.getName()));
         }
     }

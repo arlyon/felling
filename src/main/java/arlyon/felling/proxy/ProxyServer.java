@@ -1,4 +1,4 @@
-package arlyon.felling.core.proxy;
+package arlyon.felling.proxy;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;

@@ -1,4 +1,4 @@
-package arlyon.felling.packets;
+package arlyon.felling.network;
 
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
