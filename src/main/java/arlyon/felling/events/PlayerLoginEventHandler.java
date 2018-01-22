@@ -19,7 +19,12 @@ public class PlayerLoginEventHandler {
     @SubscribeEvent
     public void registerPlayerSettings(EntityJoinWorldEvent event) {
         if (event.getEntity() == Minecraft.getMinecraft().player) {
-            PacketHandler.INSTANCE.sendToServer(new FellingSettingsMessage(Configuration.clientSide.disableWhenCrouched, Configuration.clientSide.disableWhenStanding));
+            PacketHandler.INSTANCE.sendToServer(
+                    new FellingSettingsMessage(
+                            Configuration.clientSide.disableWhenCrouched,
+                            Configuration.clientSide.disableWhenStanding
+                    )
+            );
         }
     }
 }

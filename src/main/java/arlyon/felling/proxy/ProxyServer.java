@@ -20,8 +20,6 @@ public class ProxyServer extends ProxyCommon {
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent e) {
-        super.postInit(e);
-    }
+    public void postInit(FMLPostInitializationEvent e) { super.postInit(e); }
 
 }

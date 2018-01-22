@@ -1,6 +1,6 @@
 package arlyon.felling.proxy;
 
-import arlyon.felling.Enchantment;
+import arlyon.felling.FellingEnchantment;
 import arlyon.felling.events.PlayerLoginEventHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -44,8 +44,8 @@ public class ProxyClient extends ProxyCommon {
      */
     private void addEnchantToCreativeTab() {
         EnumEnchantmentType[] enchantmentTypes = CreativeTabs.TOOLS.getRelevantEnchantmentTypes();
-        enchantmentTypes = Arrays.copyOf(CreativeTabs.TOOLS.getRelevantEnchantmentTypes(), enchantmentTypes.length+1);
-        enchantmentTypes[enchantmentTypes.length-1] = Enchantment.AXE;
+        enchantmentTypes = Arrays.copyOf(enchantmentTypes, enchantmentTypes.length+1);
+        enchantmentTypes[enchantmentTypes.length-1] = FellingEnchantment.AXE;
         CreativeTabs.TOOLS.setRelevantEnchantmentTypes(enchantmentTypes);
     }
 }

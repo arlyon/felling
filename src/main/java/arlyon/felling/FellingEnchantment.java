@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.EnumHelper;
 /**
  * The enchantment class for the Felling enchantment.
  */
-public class Enchantment extends net.minecraft.enchantment.Enchantment {
+public class FellingEnchantment extends net.minecraft.enchantment.Enchantment {
 
     /**
      * The AXE enchantment type.
@@ -27,7 +27,7 @@ public class Enchantment extends net.minecraft.enchantment.Enchantment {
      * @param rarityIn The rarity of the enchantment.
      * @param slots The slots in which the enchantment is valid.
      */
-    Enchantment(Rarity rarityIn, EntityEquipmentSlot... slots) {
+    FellingEnchantment(Rarity rarityIn, EntityEquipmentSlot... slots) {
         super(rarityIn, AXE, slots);
         setName("felling");
         setRegistryName("felling");
@@ -41,7 +41,9 @@ public class Enchantment extends net.minecraft.enchantment.Enchantment {
      * @param enchantmentLevel The level you want to get minimum enchantability weight for.
      * @return Minimum value of enchantability for the given enchantment level.
      */
-    public int getMinEnchantability(int enchantmentLevel) { return ((5 + (enchantmentLevel) * 10) * Configuration.serverSide.enchantmentRarity) / 100; }
+    public int getMinEnchantability(int enchantmentLevel) {
+        return ((5 + (enchantmentLevel) * 10) * Configuration.serverSide.enchantmentRarity) / 100;
+    }
 
     /**
      * Felling I - 25

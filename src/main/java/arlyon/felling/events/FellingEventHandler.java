@@ -20,7 +20,7 @@ import java.util.*;
 
 import static net.minecraft.init.Enchantments.FORTUNE;
 
-public class EnchantmentEventHandler {
+public class FellingEventHandler {
 
     /**
      * Used to determine which part of the tree a block is.
@@ -330,7 +330,6 @@ public class EnchantmentEventHandler {
                 treePart == BlockType.LEAF ?
                         Configuration.serverSide.durabilityDamage * Configuration.serverSide.leafMultiplier / 100 :
                         Configuration.serverSide.durabilityDamage,
-                new Random(),
-                thePlayer);
+                new Random());
     }
 }

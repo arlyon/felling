@@ -1,6 +1,6 @@
 package arlyon.felling.proxy;
 
-import arlyon.felling.events.EnchantmentEventHandler;
+import arlyon.felling.events.FellingEventHandler;
 import arlyon.felling.network.PacketHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -18,7 +18,7 @@ public class ProxyCommon {
      */
     public void preInit(FMLPreInitializationEvent e) {
         PacketHandler.registerMessages("felling");
-        MinecraftForge.EVENT_BUS.register(new EnchantmentEventHandler());
+        MinecraftForge.EVENT_BUS.register(new FellingEventHandler());
     }
 
     public void init(FMLInitializationEvent e) { }

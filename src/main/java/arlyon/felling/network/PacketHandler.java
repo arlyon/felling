@@ -37,6 +37,11 @@ public class PacketHandler {
      * Registers the messages which are to be sent from the client to the server.
      */
     private static void registerMessages() {
-        INSTANCE.registerMessage(FellingSettingsMessage.Handler.class, FellingSettingsMessage.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(
+                FellingSettingsMessage.Handler.class,
+                FellingSettingsMessage.class,
+                nextID(),
+                Side.SERVER
+        );
     }
 }
