@@ -2,3 +2,9 @@ build/
 .idea/
 .gradle/
 run/
+out/
+felling\.ipr
+
+felling\.iml
+
+felling\.iws
