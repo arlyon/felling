@@ -22,19 +22,18 @@ import java.util.Map;
         modid = Felling.MOD_ID,
         name = Felling.MOD_NAME,
         version = Felling.VERSION,
-        updateJSON= Felling.UPDATE_JSON,
+        updateJSON = Felling.UPDATE_JSON,
         acceptedMinecraftVersions = Felling.MINECRAFT_VERSIONS
 )
 public class Felling {
 
+    public static final FellingEnchantment felling = new FellingEnchantment(net.minecraft.enchantment.Enchantment.Rarity.UNCOMMON, EntityEquipmentSlot.MAINHAND);
+    public static final Map<Integer, PlayerSettings> playerSettings = new HashMap<>();
     static final String MOD_NAME = "Felling";
     static final String MOD_ID = "felling";
     static final String VERSION = "1.3.2";
     static final String UPDATE_JSON = "https://raw.githubusercontent.com/arlyon/felling/1.12.x/update.json";
     static final String MINECRAFT_VERSIONS = "[1.12.0, 1.12.2]"; // starting with 1.12, up to 1.12.2
-
-    public static final Enchantment felling = new Enchantment(net.minecraft.enchantment.Enchantment.Rarity.UNCOMMON, EntityEquipmentSlot.MAINHAND);
-    public static final Map<Integer, PlayerSettings> playerSettings = new HashMap<>();
     public static Logger log;
 
     @SidedProxy(clientSide = "arlyon.felling.proxy.ProxyClient", serverSide = "arlyon.felling.proxy.ProxyServer")
@@ -42,6 +41,7 @@ public class Felling {
 
     /**
      * Passes the pre-initialization event onwards to the proxy.
+     *
      * @param e The pre-initialization event.
      */
     @Mod.EventHandler
@@ -52,17 +52,23 @@ public class Felling {
 
     /**
      * Passes the initialization event onwards to the proxy.
+     *
      * @param e The initialization event.
      */
     @Mod.EventHandler
-    public void init(FMLInitializationEvent e) { proxy.init(e); }
+    public void init(FMLInitializationEvent e) {
+        proxy.init(e);
+    }
 
     /**
      * Passes the post-initialization event onwards to the proxy.
+     *
      * @param e The post-initialization event.
      */
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent e) { proxy.postInit(e); }
+    public void postInit(FMLPostInitializationEvent e) {
+        proxy.postInit(e);
+    }
 
     /**
      * Sets up some event handlers.
@@ -71,7 +77,8 @@ public class Felling {
     public static class EventSubscriber {
 
         /**
-         * Registers the felling enchantment when the Enchantment register event fires.
+         * Registers the felling enchantment when the FellingEnchantment register event fires.
+         *
          * @param event The enchantment register event.
          */
         @SubscribeEvent

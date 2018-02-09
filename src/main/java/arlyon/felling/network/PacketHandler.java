@@ -9,23 +9,15 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class PacketHandler {
 
-    private static int packetId = 0;
-
     public static SimpleNetworkWrapper INSTANCE = null;
+    private static int packetId = 0;
 
     public PacketHandler() {
     }
 
     /**
-     * Gets the next packet id.
-     * @return The next packet id.
-     */
-    private static int nextID() {
-        return packetId++;
-    }
-
-    /**
      * Called to set up a client->server channel on the packet handler.
+     *
      * @param channelName The name of the channel.
      */
     public static void registerMessages(String channelName) {
@@ -37,6 +29,20 @@ public class PacketHandler {
      * Registers the messages which are to be sent from the client to the server.
      */
     private static void registerMessages() {
-        INSTANCE.registerMessage(FellingSettingsMessage.Handler.class, FellingSettingsMessage.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(
+                FellingSettingsMessage.Handler.class,
+                FellingSettingsMessage.class,
+                nextID(),
+                Side.SERVER
+        );
+    }
+
+    /**
+     * Gets the next packet id.
+     *
+     * @return The next packet id.
+     */
+    private static int nextID() {
+        return packetId++;
     }
 }

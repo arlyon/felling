@@ -20,15 +20,7 @@ import java.util.*;
 
 import static net.minecraft.init.Enchantments.FORTUNE;
 
-public class EnchantmentEventHandler {
-
-    /**
-     * Used to determine which part of the tree a block is.
-     */
-    private enum BlockType {
-        LEAF,
-        LOG,
-    }
+public class FellingEventHandler {
 
     /**
      * The paths for felling one, to reach up and down.
@@ -38,7 +30,6 @@ public class EnchantmentEventHandler {
             {EnumFacing.UP},
             {EnumFacing.DOWN}
     };
-
     /**
      * The paths for felling two, to reach all adjacent blocks.
      */
@@ -51,7 +42,6 @@ public class EnchantmentEventHandler {
             {EnumFacing.EAST},
             {EnumFacing.WEST}
     };
-
     /**
      * The paths for felling three, to reach adjacent blocks including diagonals.
      */
@@ -78,7 +68,6 @@ public class EnchantmentEventHandler {
             {EnumFacing.DOWN, EnumFacing.SOUTH, EnumFacing.WEST},
             {EnumFacing.DOWN, EnumFacing.SOUTH, EnumFacing.EAST},
     };
-
     /**
      * Array of all the paths for each of the three felling levels.
      */
@@ -127,21 +116,6 @@ public class EnchantmentEventHandler {
     }
 
     /**
-     * Gets the block type of the block.
-     *
-     * @param block The block to test.
-     * @return The block type.
-     */
-    private static BlockType getTreePart(Block block) {
-        if (block.isWood(null, null))
-            return BlockType.LOG;
-        else if (block.isLeaves(block.getDefaultState(), null, null))
-            return BlockType.LEAF;
-        else
-            return null;
-    }
-
-    /**
      * Checks the configs to see if the block should break by checking
      * if the player is standing or crouching and testing if the config
      * has the given state enabled or disabled.
@@ -152,24 +126,6 @@ public class EnchantmentEventHandler {
     private boolean configAllowsBreak(BlockEvent.BreakEvent event) {
         PlayerSettings playerSettings = getOrCreatePlayerSettings(event.getPlayer());
         return event.getPlayer().isSneaking() ? !playerSettings.disableWhenCrouched : !playerSettings.disableWhenStanding;
-    }
-
-    /**
-     * Given a player, gets or creates a player settings profile for a user.
-     *
-     * @param thePlayer The player to check.
-     * @return The given player's settings.
-     * TODO maybe move this somewhere else.
-     */
-    private PlayerSettings getOrCreatePlayerSettings(EntityPlayer thePlayer) {
-        PlayerSettings playerSettings = Felling.playerSettings.get(thePlayer.getGameProfile().hashCode());
-
-        if (playerSettings == null) {
-            playerSettings = new PlayerSettings(true, true);
-            thePlayer.sendMessage(new TextComponentString("Your Felling settings aren't synced with the server. Please update the settings in the mod config to resend them."));
-        }
-
-        return playerSettings;
     }
 
     /**
@@ -204,13 +160,18 @@ public class EnchantmentEventHandler {
     }
 
     /**
-     * Gets the list of valid felling paths given an event.
+     * Gets the block type of the block.
      *
-     * @param event The break event.
-     * @return The list of paths matching the felling enchantment version.
+     * @param block The block to test.
+     * @return The block type.
      */
-    private static EnumFacing[][] getPaths(BlockEvent.BreakEvent event) {
-        return fellingPaths[EnchantmentHelper.getEnchantmentLevel(Felling.felling, event.getPlayer().getHeldItemMainhand()) - 1];
+    private static BlockType getTreePart(Block block) {
+        if (block.isWood(null, null))
+            return BlockType.LOG;
+        else if (block.isLeaves(block.getDefaultState(), null, null))
+            return BlockType.LEAF;
+        else
+            return null;
     }
 
     /**
@@ -240,39 +201,31 @@ public class EnchantmentEventHandler {
     }
 
     /**
-     * Checks all the blocks reached from the list of paths and checks
-     * if they are valid breaks before returning the lost of all valid.
+     * Gets the list of valid felling paths given an event.
      *
-     * @param startPosition The starting position.
-     * @param world         The world.
-     * @param paths         The list of paths.
-     * @return The block positions that are valid blocks to break.
+     * @param event The break event.
+     * @return The list of paths matching the felling enchantment version.
      */
-    private static Collection<BlockPos> getSurroundingBlocks(BlockPos startPosition, World world, EnumFacing[][] paths) {
-        // for each path passed in, travel to the block and test it
-        Queue<BlockPos> newBlocks = new LinkedList<>();
-
-        for (EnumFacing[] pathToFollow : paths) {
-            BlockPos nextBlockPosition = travelToBlock(startPosition, pathToFollow);
-            BlockType nextTreePart = getTreePart(world.getBlockState(nextBlockPosition).getBlock());
-
-            if (treePartShouldBreak(nextTreePart)) {
-                newBlocks.add(nextBlockPosition);
-            }
-        }
-
-        return newBlocks;
+    private static EnumFacing[][] getPaths(BlockEvent.BreakEvent event) {
+        return fellingPaths[EnchantmentHelper.getEnchantmentLevel(Felling.felling, event.getPlayer().getHeldItemMainhand()) - 1];
     }
 
     /**
-     * Given a starting block and path of EnumFacings, follows the path and returns a new position.
+     * Given a player, gets or creates a player settings profile for a user.
      *
-     * @param startingBlock The block to start on.
-     * @param pathToFollow  The path to follow.
-     * @return The new block position.
+     * @param thePlayer The player to check.
+     * @return The given player's settings.
+     * TODO maybe move this somewhere else.
      */
-    private static BlockPos travelToBlock(BlockPos startingBlock, EnumFacing[] pathToFollow) {
-        return Arrays.stream(pathToFollow).reduce(startingBlock, BlockPos::offset, (a, b) -> null);
+    private PlayerSettings getOrCreatePlayerSettings(EntityPlayer thePlayer) {
+        PlayerSettings playerSettings = Felling.playerSettings.get(thePlayer.getGameProfile().hashCode());
+
+        if (playerSettings == null) {
+            playerSettings = new PlayerSettings(true, true);
+            thePlayer.sendMessage(new TextComponentString("Your Felling settings aren't synced with the server. Please update the settings in the mod config to resend them."));
+        }
+
+        return playerSettings;
     }
 
     /**
@@ -318,6 +271,31 @@ public class EnchantmentEventHandler {
     }
 
     /**
+     * Checks all the blocks reached from the list of paths and checks
+     * if they are valid breaks before returning the lost of all valid.
+     *
+     * @param startPosition The starting position.
+     * @param world         The world.
+     * @param paths         The list of paths.
+     * @return The block positions that are valid blocks to break.
+     */
+    private static Collection<BlockPos> getSurroundingBlocks(BlockPos startPosition, World world, EnumFacing[][] paths) {
+        // for each path passed in, travel to the block and test it
+        Queue<BlockPos> newBlocks = new LinkedList<>();
+
+        for (EnumFacing[] pathToFollow : paths) {
+            BlockPos nextBlockPosition = travelToBlock(startPosition, pathToFollow);
+            BlockType nextTreePart = getTreePart(world.getBlockState(nextBlockPosition).getBlock());
+
+            if (treePartShouldBreak(nextTreePart)) {
+                newBlocks.add(nextBlockPosition);
+            }
+        }
+
+        return newBlocks;
+    }
+
+    /**
      * Damages the given item and returns whether it should break.
      *
      * @param thePlayer The player to deal damage to.
@@ -332,5 +310,24 @@ public class EnchantmentEventHandler {
                         Configuration.serverSide.durabilityDamage,
                 new Random(),
                 thePlayer);
+    }
+
+    /**
+     * Given a starting block and path of EnumFacings, follows the path and returns a new position.
+     *
+     * @param startingBlock The block to start on.
+     * @param pathToFollow  The path to follow.
+     * @return The new block position.
+     */
+    private static BlockPos travelToBlock(BlockPos startingBlock, EnumFacing[] pathToFollow) {
+        return Arrays.stream(pathToFollow).reduce(startingBlock, BlockPos::offset, (a, b) -> null);
+    }
+
+    /**
+     * Used to determine which part of the tree a block is.
+     */
+    private enum BlockType {
+        LEAF,
+        LOG,
     }
 }

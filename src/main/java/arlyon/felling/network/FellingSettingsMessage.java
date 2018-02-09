@@ -21,6 +21,7 @@ public class FellingSettingsMessage implements IMessage {
 
     /**
      * Creates a new instance of the felling settings message.
+     *
      * @param disableWhenCrouched Whether the client has the option enabled.
      * @param disableWhenStanding Whether the client has the option enabled.
      */
@@ -31,6 +32,7 @@ public class FellingSettingsMessage implements IMessage {
 
     /**
      * Writes the boolean values to the buffer.
+     *
      * @param byteBuf The buffer to write to.
      */
     @Override
@@ -41,6 +43,7 @@ public class FellingSettingsMessage implements IMessage {
 
     /**
      * Reads the boolean values from the buffer.
+     *
      * @param byteBuf The buffer to read from.
      */
     @Override
@@ -59,7 +62,7 @@ public class FellingSettingsMessage implements IMessage {
          * When receiving a message, add a new task on the world thread to handle the message.
          *
          * @param message In incoming message.
-         * @param ctx The message context.
+         * @param ctx     The message context.
          * @return Nothing. Can return a reply message.
          */
         @Override

@@ -37,25 +37,25 @@ public class Configuration {
         @Config.Name("Felling Durability Cost")
         @Config.Comment("Controls how much damage is done to the axe per log when the enchantment topples a tree.")
         @Config.LangKey("felling.config.server.durabilityDamage")
-        @Config.RangeInt(min=0, max=5)
+        @Config.RangeInt(min = 0, max = 5)
         public int durabilityDamage = 2;
 
         @Config.Name("Leaf Cost Multiplier")
         @Config.Comment("Controls the amount of damage that cutting leaves causes to your axe in relation to the value set for logs. The max (200%) is double durability damage compared to normal logs, with 0% being no damage.")
         @Config.LangKey("felling.config.server.leafMultiplier")
-        @Config.RangeInt(min=0, max=200)
+        @Config.RangeInt(min = 0, max = 200)
         public int leafMultiplier = 100;
 
         @Config.Name("Rarity (%)")
         @Config.Comment("Controls how rare the enchantment is (with 100% being as the mod was intended). It is recommended to keep it between 80% and 120%, and more statistics can be found on the wiki.")
         @Config.LangKey("felling.config.server.enchantmentRarity")
-        @Config.RangeInt(min=0, max=200)
+        @Config.RangeInt(min = 0, max = 200)
         public int enchantmentRarity = 100;
 
         @Config.Name("Maximum Blocks To Break")
         @Config.Comment("Puts a limit on the number of blocks to break. 0 for no limit.")
         @Config.LangKey("felling.config.server.maxBlocks")
-        @Config.RangeInt(min=0)
+        @Config.RangeInt(min = 0)
         public int maxBlocks = 0;
 
     }
@@ -85,6 +85,7 @@ public class Configuration {
 
         /**
          * Saves the config locally and also sends critical values to the server when the config changes.
+         *
          * @param event The config changed event.
          */
         @SubscribeEvent
