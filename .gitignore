@@ -3,8 +3,7 @@ build/
 .gradle/
 run/
 out/
-felling\.ipr
-
-felling\.iml
-
-felling\.iws
+*.iml
+*.ipr
+*.iws
+.todos.json
