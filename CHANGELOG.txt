@@ -39,7 +39,7 @@ version 1.2.1
     - Updated slightly to be compatible with 1.12
     - Added forge update checker.
 
-version 1.2
+version 1.2.0
 
     - added enchantment book to creative
     - check for logWood in oredict instead
@@ -49,7 +49,7 @@ version 1.2
         - allow user to reduce the durability cost on tools
         - allow users to adjust the cost of leaves relative to logs
 
-version 1.1
+version 1.1.0
 
     - when using the axe, if you go into sneak mode you are able to break blocks normally
     - did a few small changes to optimize the code
@@ -58,7 +58,7 @@ version 1.1
     - introduced a 2nd tier that also chops in cardinal directions
     - balancing: felling I is more obtainable, but felling II is quite rare
 
-version 1.0
+version 1.0.0
 
     - basic enchantment with a simple upwards algorithm
     - basic localization
