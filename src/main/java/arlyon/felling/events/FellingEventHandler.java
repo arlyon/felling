@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -124,7 +123,7 @@ public class FellingEventHandler {
      * @return Whether the config allows the break.
      */
     private boolean configAllowsBreak(BlockEvent.BreakEvent event) {
-        PlayerSettings playerSettings = getOrCreatePlayerSettings(event.getPlayer());
+        PlayerSettings playerSettings = Felling.getOrCreatePlayerSettings(event.getPlayer());
         return event.getPlayer().isSneaking() ? !playerSettings.disableWhenCrouched : !playerSettings.disableWhenStanding;
     }
 
@@ -208,24 +207,6 @@ public class FellingEventHandler {
      */
     private static EnumFacing[][] getPaths(BlockEvent.BreakEvent event) {
         return fellingPaths[EnchantmentHelper.getEnchantmentLevel(Felling.felling, event.getPlayer().getHeldItemMainhand()) - 1];
-    }
-
-    /**
-     * Given a player, gets or creates a player settings profile for a user.
-     *
-     * @param thePlayer The player to check.
-     * @return The given player's settings.
-     * TODO maybe move this somewhere else.
-     */
-    private PlayerSettings getOrCreatePlayerSettings(EntityPlayer thePlayer) {
-        PlayerSettings playerSettings = Felling.playerSettings.get(thePlayer.getGameProfile().hashCode());
-
-        if (playerSettings == null) {
-            playerSettings = new PlayerSettings(true, true);
-            thePlayer.sendMessage(new TextComponentString("Your Felling settings aren't synced with the server. Please update the settings in the mod config to resend them."));
-        }
-
-        return playerSettings;
     }
 
     /**

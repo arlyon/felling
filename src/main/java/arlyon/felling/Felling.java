@@ -2,7 +2,9 @@ package arlyon.felling;
 
 import arlyon.felling.network.PlayerSettings;
 import arlyon.felling.proxy.ProxyCommon;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -85,5 +87,22 @@ public class Felling {
         public static void registerEnchantment(RegistryEvent.Register<net.minecraft.enchantment.Enchantment> event) {
             event.getRegistry().register(felling);
         }
+    }
+
+    /**
+     * Given a player, gets or creates a player settings profile for a user.
+     *
+     * @param thePlayer The player to check.
+     * @return The given player's settings.
+     */
+    public static PlayerSettings getOrCreatePlayerSettings(EntityPlayer thePlayer) {
+        PlayerSettings playerSettings = Felling.playerSettings.get(thePlayer.getGameProfile().hashCode());
+
+        if (playerSettings == null) {
+            playerSettings = new PlayerSettings(true, true);
+            thePlayer.sendMessage(new TextComponentString("Your Felling settings aren't synced with the server. Please update the settings in the mod config to resend them."));
+        }
+
+        return playerSettings;
     }
 }
