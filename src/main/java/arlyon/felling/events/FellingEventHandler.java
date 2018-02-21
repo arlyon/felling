@@ -4,6 +4,7 @@ import arlyon.felling.Configuration;
 import arlyon.felling.Felling;
 import arlyon.felling.network.PlayerSettings;
 import arlyon.felling.support.UniqueQueue;
+import arlyon.felling.support.ValueQueue;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -184,17 +185,17 @@ public class FellingEventHandler {
      * @param paths         The paths to fell.
      */
     private static void fellingAlgorithm(BlockPos blockPosition, World world, EntityPlayer thePlayer, BlockType treePart, EnumFacing[][] paths) {
-        Queue<BlockPos> blocks = new UniqueQueue<>();
-        blocks.add(blockPosition);
+        ValueQueue<BlockPos> blocks = new ValueQueue<>(Configuration.serverSide.maxDistance);
+        blocks.add(blockPosition, 0);
         int blocksBroken = 0;
 
         while (blocks.size() > 0 && (Configuration.serverSide.maxBlocks == 0 || blocksBroken <= Configuration.serverSide.maxBlocks)) {
-            blockPosition = blocks.remove(); // next block
+            blockPosition = blocks.peek(); // next block
 
             breakBlock(blockPosition, world, thePlayer); // break
             if (mainHandBreaksWhenDamaged(thePlayer, treePart)) return; // damage
 
-            getSurroundingBlocks(blockPosition, world, paths).forEach(blocks::offer);
+            getSurroundingBlocks(blocks, blockPosition, world, paths, blocks.getDistance(blockPosition));
             blocksBroken += 1;
         }
     }
@@ -258,22 +259,20 @@ public class FellingEventHandler {
      * @param startPosition The starting position.
      * @param world         The world.
      * @param paths         The list of paths.
-     * @return The block positions that are valid blocks to break.
      */
-    private static Collection<BlockPos> getSurroundingBlocks(BlockPos startPosition, World world, EnumFacing[][] paths) {
-        // for each path passed in, travel to the block and test it
-        Queue<BlockPos> newBlocks = new LinkedList<>();
+    private static void getSurroundingBlocks(ValueQueue<BlockPos> blocks, BlockPos startPosition, World world, EnumFacing[][] paths, int distance) {
+        blocks.remove();
 
         for (EnumFacing[] pathToFollow : paths) {
             BlockPos nextBlockPosition = travelToBlock(startPosition, pathToFollow);
             BlockType nextTreePart = getTreePart(world.getBlockState(nextBlockPosition).getBlock());
 
             if (treePartShouldBreak(nextTreePart)) {
-                newBlocks.add(nextBlockPosition);
+                blocks.add(nextBlockPosition, 0);
+            } else {
+                blocks.add(nextBlockPosition, distance + 1);
             }
         }
-
-        return newBlocks;
     }
 
     /**

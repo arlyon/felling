@@ -58,6 +58,11 @@ public class Configuration {
         @Config.RangeInt(min = 0)
         public int maxBlocks = 0;
 
+        @Config.Name("Maximum Distance Between Blocks")
+        @Config.Comment("Allows you to control how far away trees can be from each other and still be destroyed.")
+        @Config.LangKey("felling.config.server.maxDistance")
+        @Config.RangeInt(min = 1, max = 10)
+        public int maxDistance = 1;
     }
 
     /**
