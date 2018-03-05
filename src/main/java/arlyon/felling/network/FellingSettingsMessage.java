@@ -75,7 +75,7 @@ public class FellingSettingsMessage implements IMessage {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             Felling.playerSettings.put(playerEntity.getGameProfile().hashCode(), new PlayerSettings(message.disableWhenCrouched, message.disableWhenStanding));
-            Felling.log.info(String.format("%s sent client side settings to server.", playerEntity.getName()));
+            Felling.log.debug(String.format("%s sent client side settings to server.", playerEntity.getName()));
         }
     }
 }

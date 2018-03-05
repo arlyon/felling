@@ -20,6 +20,7 @@ To set up the development environment in IDEA:
 - bump version number in `Felling.class` and in `mcmod.info`
 - bump version number in `build.properties`
 - add changes to changelog
+- write to update.json
 - commit and add tag
 - push tags to github `git push --tags`
 - push to github `./gradlew githubRelease`
