@@ -2,17 +2,26 @@ package arlyon.felling.support;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * The value queue is a fifo data structure backed by a map of values.
- * The way it works, is that values are added to the queue and assigned a value.
- * @param <T>
+ * Items added to the queue with a value greater than the maxValue will
+ * be ignored. If they are added again, and now qualify then they will
+ * be added to the queue.
+ * <p>
+ * Uses include:
+ * - calculating Levenshtein distance of words and retrieving words with x or less.
+ * - getting items only x units away from a source
+ *
+ * @param <T> Any object that implements equals and hashCode (for Hashtable)
  */
 public class ValueQueue<T> {
 
     private final Map<T, Integer> map;
-    private final Queue<T> queue;
+    private Queue<T> queue;
+
     private int maxValue;
 
     public ValueQueue(int maxValue) {
@@ -24,7 +33,8 @@ public class ValueQueue<T> {
     /**
      * Adds the element to the queue if the value is lower
      * than the max and has not been added to the queue.
-     * @param t The element to add to the queue.
+     *
+     * @param t        The element to add to the queue.
      * @param newValue The value to insert.
      */
     public void add(T t, int newValue) {
@@ -43,6 +53,7 @@ public class ValueQueue<T> {
      * if the queue has any elements left to give,
      * sets that element to -1 (signifying completion)
      * and then returns it.
+     *
      * @return The element or null if no more exist.
      */
     public T remove() {
@@ -53,13 +64,14 @@ public class ValueQueue<T> {
 
     /**
      * Peeks the first element.
+     *
      * @return The element or null.
      */
     public T peek() {
         return queue.peek();
     }
 
-    public int getDistance(T value) {
+    public int getValue(T value) {
         return map.get(value);
     }
 
@@ -71,7 +83,7 @@ public class ValueQueue<T> {
         return queue.isEmpty();
     }
 
-    public boolean contains(Object o) {
+    public boolean contains(T o) {
         return queue.contains(o);
     }
 
@@ -92,15 +104,29 @@ public class ValueQueue<T> {
         map.clear();
     }
 
-    public Spliterator<T> spliterator() {
-        return queue.spliterator();
-    }
-
     public Stream<T> stream() {
         return queue.stream();
     }
 
-    public Stream<T> parallelStream() {
-        return queue.parallelStream();
+    /**
+     * Updates the max value and recalculates
+     * the queue to match.
+     * @param maxValue The new max value.
+     */
+    public void setMaxValue(int maxValue) {
+        if (maxValue > this.maxValue)
+            this.map.keySet().forEach(element -> {
+                int val = this.map.get(element);
+                if (val > this.maxValue && val <= maxValue) {
+                    this.queue.add(element);
+                }
+            });
+        else if (maxValue < this.maxValue) {
+            this.queue = this.queue.stream()
+                    .filter(element -> this.map.get(element) > maxValue)
+                    .collect(Collectors.toCollection(ArrayDeque::new));
+        }
+
+        this.maxValue = maxValue;
     }
 }

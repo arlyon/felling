@@ -3,7 +3,6 @@ package arlyon.felling.events;
 import arlyon.felling.Configuration;
 import arlyon.felling.Felling;
 import arlyon.felling.network.PlayerSettings;
-import arlyon.felling.support.UniqueQueue;
 import arlyon.felling.support.ValueQueue;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -178,25 +177,31 @@ public class FellingEventHandler {
      * Breaks the block at a given position and then for
      * each path continues felling on that block as well.
      *
-     * @param blockPosition The position of the block.
+     * @param blockPosition The position of the block to start on.
      * @param world         The world.
      * @param thePlayer     The player.
      * @param treePart      The tree part.
      * @param paths         The paths to fell.
      */
     private static void fellingAlgorithm(BlockPos blockPosition, World world, EntityPlayer thePlayer, BlockType treePart, EnumFacing[][] paths) {
+        BlockPos currentPosition = blockPosition;
+
         ValueQueue<BlockPos> blocks = new ValueQueue<>(Configuration.serverSide.maxDistance);
-        blocks.add(blockPosition, 0);
+        blocks.add(currentPosition, 0);
         int blocksBroken = 0;
 
-        while (blocks.size() > 0 && (Configuration.serverSide.maxBlocks == 0 || blocksBroken <= Configuration.serverSide.maxBlocks)) {
-            blockPosition = blocks.peek(); // next block
+        while (!blocks.isEmpty() && (blocksBroken <= Configuration.serverSide.maxBlocks || Configuration.serverSide.maxBlocks == 0)) {
+            currentPosition = blocks.peek(); // next block
+            int distance = blocks.getValue(currentPosition);
 
-            breakBlock(blockPosition, world, thePlayer); // break
-            if (mainHandBreaksWhenDamaged(thePlayer, treePart)) return; // damage
+            if (distance == 0) {
+                breakBlock(currentPosition, world, thePlayer); // is a log, break
+                blocksBroken += 1;
+            }
 
-            getSurroundingBlocks(blocks, blockPosition, world, paths, blocks.getDistance(blockPosition));
-            blocksBroken += 1;
+            if (mainHandBreaksWhenDamaged(thePlayer, treePart)) return;
+
+            getSurroundingBlocks(blocks, world, paths, distance);
         }
     }
 
@@ -255,13 +260,13 @@ public class FellingEventHandler {
     /**
      * Checks all the blocks reached from the list of paths and checks
      * if they are valid breaks before returning the lost of all valid.
-     *
-     * @param startPosition The starting position.
-     * @param world         The world.
-     * @param paths         The list of paths.
+     * @param blocks The block queue to add valid blocks to.
+     * @param world The world
+     * @param paths The array of paths to get to the valid blocks.
+     * @param currentDistance The current distance.
      */
-    private static void getSurroundingBlocks(ValueQueue<BlockPos> blocks, BlockPos startPosition, World world, EnumFacing[][] paths, int distance) {
-        blocks.remove();
+    private static void getSurroundingBlocks(ValueQueue<BlockPos> blocks, World world, EnumFacing[][] paths, int currentDistance) {
+        BlockPos startPosition = blocks.remove();
 
         for (EnumFacing[] pathToFollow : paths) {
             BlockPos nextBlockPosition = travelToBlock(startPosition, pathToFollow);
@@ -270,7 +275,7 @@ public class FellingEventHandler {
             if (treePartShouldBreak(nextTreePart)) {
                 blocks.add(nextBlockPosition, 0);
             } else {
-                blocks.add(nextBlockPosition, distance + 1);
+                blocks.add(nextBlockPosition, currentDistance + 1);
             }
         }
     }

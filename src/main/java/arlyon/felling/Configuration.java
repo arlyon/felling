@@ -53,16 +53,16 @@ public class Configuration {
         public int enchantmentRarity = 100;
 
         @Config.Name("Maximum Blocks To Break")
-        @Config.Comment("Puts a limit on the number of blocks to break. 0 for no limit.")
+        @Config.Comment("Puts a limit on the number of blocks to break. Zero for no limit.")
         @Config.LangKey("felling.config.server.maxBlocks")
         @Config.RangeInt(min = 0)
         public int maxBlocks = 0;
 
-        @Config.Name("Maximum Distance Between Blocks")
-        @Config.Comment("Allows you to control how far away trees can be from each other and still be destroyed.")
+        @Config.Name("Maximum Blocks Between Trees")
+        @Config.Comment("Controls how far away trees can be from each other and still be destroyed. Zero means no gap (ie contiguous). Values above 1 or 2 not recommended.")
         @Config.LangKey("felling.config.server.maxDistance")
-        @Config.RangeInt(min = 1, max = 10)
-        public int maxDistance = 1;
+        @Config.RangeInt(min = 0, max = 5)
+        public int maxDistance = 0;
     }
 
     /**
