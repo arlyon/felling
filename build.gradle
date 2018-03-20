@@ -104,6 +104,7 @@ github {
 
 // --- dependencies ---
 dependencies {
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.1.0-RC1'
 }
 
 // --- resources ---
