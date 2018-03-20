@@ -33,7 +33,7 @@ public class Felling {
     public static final Map<Integer, PlayerSettings> playerSettings = new HashMap<>();
     static final String MOD_NAME = "Felling";
     static final String MOD_ID = "felling";
-    static final String VERSION = "1.3.3";
+    static final String VERSION = "1.4.0";
     static final String UPDATE_JSON = "https://raw.githubusercontent.com/arlyon/felling/1.12.x/update.json";
     static final String MINECRAFT_VERSIONS = "[1.12.0, 1.12.2]"; // starting with 1.12, up to 1.12.2
     public static Logger log;
