@@ -2,30 +2,33 @@ package arlyon.felling.support;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * The value queue is a fifo data structure backed by a map of values.
- * Items added to the queue with a value greater than the maxValue will
- * be ignored. If they are added again, and now qualify then they will
- * be added to the queue.
- * <p>
+ * The value queue is a fifo (excluding when the predicate is changed)
+ * data structure backed by a map of values. Items added to the queue with
+ * a that pass the predicate will be added into the set but not in
+ * the queue. Only when the predicate changes or the item is re-added may
+ * it appear in the queue. Items that have already been popped may be added again,
+ * but will be ignored.
+ *
  * Uses include:
  * - calculating Levenshtein distance of words and retrieving words with x or less.
  * - getting items only x units away from a source
  *
  * @param <T> Any object that implements equals and hashCode (for Hashtable)
  */
-public class ValueQueue<T> {
+public class ValueUniqueQueue<T> {
 
     private final Map<T, Integer> map;
     private Queue<T> queue;
 
-    private int maxValue;
+    private Predicate<Integer> predicate;
 
-    public ValueQueue(int maxValue) {
-        this.maxValue = maxValue;
+    public ValueUniqueQueue(Predicate<Integer> predicate) {
+        this.predicate = predicate;
         map = new Hashtable<>();
         queue = new ArrayDeque<>();
     }
@@ -40,11 +43,13 @@ public class ValueQueue<T> {
     public void add(T t, int newValue) {
         try {
             int oldValue = map.get(t); // get the old value for the item
-            if (oldValue > newValue) map.put(t, newValue); // new value is smaller: update it
-            if (oldValue > maxValue && newValue <= maxValue) queue.add(t); // new value qualifies for queue: add it
+            if (!predicate.test(oldValue) && predicate.test(newValue)) {
+                map.put(t, newValue); // new value is smaller: update it
+                queue.add(t); // new value qualifies for queue: add it
+            }
         } catch (NullPointerException e) {
             map.put(t, newValue); // add to the map if not exists
-            if (newValue <= maxValue) queue.add(t); // add to the queue if qualified
+            if (predicate.test(newValue)) queue.add(t); // add to the queue if qualified
         }
     }
 
@@ -99,7 +104,23 @@ public class ValueQueue<T> {
         return queue.toArray();
     }
 
+    /**
+     * Clears the queue but retains the set
+     * meaning that items that have been
+     * popped may not be re-added.
+     */
     public void clear() {
+        queue.clear();
+        map.clear();
+    }
+
+    /**
+     * Clears the queue and the set,
+     * allowing for elements that have been
+     * previously popped to be re-added
+     * and appear in the queue again.
+     */
+    public void reset() {
         queue.clear();
         map.clear();
     }
@@ -110,23 +131,24 @@ public class ValueQueue<T> {
 
     /**
      * Updates the max value and recalculates
-     * the queue to match.
-     * @param maxValue The new max value.
+     * the queue to match. Expensive!
+     *
+     * @param predicate The new predicate.
      */
-    public void setMaxValue(int maxValue) {
-        if (maxValue > this.maxValue)
-            this.map.keySet().forEach(element -> {
-                int val = this.map.get(element);
-                if (val > this.maxValue && val <= maxValue) {
-                    this.queue.add(element);
-                }
-            });
-        else if (maxValue < this.maxValue) {
-            this.queue = this.queue.stream()
-                    .filter(element -> this.map.get(element) > maxValue)
-                    .collect(Collectors.toCollection(ArrayDeque::new));
-        }
+    public void setPredicate(Predicate<Integer> predicate) {
+        // filter newly unqualified items in queue
+        this.queue = this.queue.stream()
+                .filter(element -> !predicate.test(this.map.get(element)))
+                .collect(Collectors.toCollection(ArrayDeque::new));
 
-        this.maxValue = maxValue;
+        // add newly qualified from set
+        this.map.keySet().forEach(element -> {
+            int val = this.map.get(element);
+            if (this.predicate.negate().and(predicate).test(val)) {
+                this.queue.add(element);
+            }
+        });
+
+        this.predicate = predicate;
     }
 }

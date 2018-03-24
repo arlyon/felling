@@ -3,7 +3,7 @@ package arlyon.felling.events;
 import arlyon.felling.Configuration;
 import arlyon.felling.Felling;
 import arlyon.felling.network.PlayerSettings;
-import arlyon.felling.support.ValueQueue;
+import arlyon.felling.support.ValueUniqueQueue;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -186,7 +186,7 @@ public class FellingEventHandler {
     private static void fellingAlgorithm(BlockPos blockPosition, World world, EntityPlayer thePlayer, BlockType treePart, EnumFacing[][] paths) {
         BlockPos currentPosition = blockPosition;
 
-        ValueQueue<BlockPos> blocks = new ValueQueue<>(Configuration.serverSide.maxDistance);
+        ValueUniqueQueue<BlockPos> blocks = new ValueUniqueQueue<>(value -> value <= Configuration.serverSide.maxDistance);
         blocks.add(currentPosition, 0);
         int blocksBroken = 0;
 
@@ -265,7 +265,7 @@ public class FellingEventHandler {
      * @param paths The array of paths to get to the valid blocks.
      * @param currentDistance The current distance.
      */
-    private static void getSurroundingBlocks(ValueQueue<BlockPos> blocks, World world, EnumFacing[][] paths, int currentDistance) {
+    private static void getSurroundingBlocks(ValueUniqueQueue<BlockPos> blocks, World world, EnumFacing[][] paths, int currentDistance) {
         BlockPos startPosition = blocks.remove();
 
         for (EnumFacing[] pathToFollow : paths) {
