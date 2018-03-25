@@ -1,5 +1,6 @@
 package arlyon.felling.support;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
  * the queue. Only when the predicate changes or the item is re-added may
  * it appear in the queue. Items that have already been popped may be added again,
  * but will be ignored.
- *
+ * <p>
  * Uses include:
  * - calculating Levenshtein distance of words and retrieving words with x or less.
  * - getting items only x units away from a source
@@ -26,11 +27,20 @@ public class ValueUniqueQueue<T> {
     private Queue<T> queue;
 
     private Predicate<Integer> predicate;
+    private Comparator<Integer> comparator;
 
-    public ValueUniqueQueue(Predicate<Integer> predicate) {
+    /**
+     * Creates a new instance of the ValueUniqueQueue
+     *
+     * @param predicate  The predicate to test for entering the queue.
+     * @param comparator The comparator to compare two values in the queue.
+     */
+    public ValueUniqueQueue(Predicate<Integer> predicate, @Nullable Comparator<Integer> comparator) {
         this.predicate = predicate;
-        map = new Hashtable<>();
-        queue = new ArrayDeque<>();
+        this.comparator = comparator;
+
+        this.map = new Hashtable<>();
+        this.queue = new ArrayDeque<>();
     }
 
     /**
@@ -44,8 +54,10 @@ public class ValueUniqueQueue<T> {
         try {
             int oldValue = map.get(t); // get the old value for the item
             if (!predicate.test(oldValue) && predicate.test(newValue)) {
-                map.put(t, newValue); // new value is smaller: update it
                 queue.add(t); // new value qualifies for queue: add it
+                map.put(t, newValue);
+            } else if (comparator != null && comparator.compare(oldValue, newValue) > 0) {
+                map.put(t, newValue); // new value is smaller: update it
             }
         } catch (NullPointerException e) {
             map.put(t, newValue); // add to the map if not exists

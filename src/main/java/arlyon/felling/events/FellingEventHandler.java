@@ -186,7 +186,7 @@ public class FellingEventHandler {
     private static void fellingAlgorithm(BlockPos blockPosition, World world, EntityPlayer thePlayer, BlockType treePart, EnumFacing[][] paths) {
         BlockPos currentPosition = blockPosition;
 
-        ValueUniqueQueue<BlockPos> blocks = new ValueUniqueQueue<>(value -> value <= Configuration.serverSide.maxDistance);
+        ValueUniqueQueue<BlockPos> blocks = new ValueUniqueQueue<>(value -> value <= Configuration.serverSide.maxDistance, Integer::compareTo);
         blocks.add(currentPosition, 0);
         int blocksBroken = 0;
 
