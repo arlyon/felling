@@ -1,4 +1,4 @@
-package arlyon.felling.support;
+package arlyon.felling.util;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

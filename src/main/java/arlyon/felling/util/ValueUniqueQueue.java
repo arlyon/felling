@@ -1,4 +1,4 @@
-package arlyon.felling.support;
+package arlyon.felling.util;
 
 import javax.annotation.Nullable;
 import java.util.*;
