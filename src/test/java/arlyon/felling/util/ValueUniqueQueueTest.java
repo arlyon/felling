@@ -7,7 +7,7 @@ class ValueUniqueQueueTest {
 
     @Test
     void add() {
-        ValueUniqueQueue<String> wordWeight = new ValueUniqueQueue<>(item -> item <= 2);
+        ValueUniqueQueue<String> wordWeight = new ValueUniqueQueue<String>(item -> item <= 2, Integer::compareTo);
         wordWeight.add("Hello", 3);
         Assertions.assertNull(wordWeight.remove());
 
@@ -18,7 +18,7 @@ class ValueUniqueQueueTest {
 
     @Test
     void predicate() {
-        ValueUniqueQueue<String> evenLength = new ValueUniqueQueue<>(item -> item % 2 == 0);
+        ValueUniqueQueue<String> evenLength = new ValueUniqueQueue<>(item -> item % 2 == 0, Integer::compareTo);
 
         String[] strings = {
                 "hello",
@@ -44,7 +44,7 @@ class ValueUniqueQueueTest {
 
     @Test
     void setMaxValue() {
-        ValueUniqueQueue<String> wordWeight = new ValueUniqueQueue<>(item -> item <= 2);
+        ValueUniqueQueue<String> wordWeight = new ValueUniqueQueue<>(item -> item <= 2, Integer::compareTo);
         wordWeight.add("Hello", 3);
         Assertions.assertNull(wordWeight.remove());
 
