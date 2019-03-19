@@ -1,3 +1,7 @@
+version 1.4.1
+
+    - (overdue) bugfixes
+
 version 1.4.0
 
     - add variable polling distance setting to cut down trees within x blocks of the current tree.
