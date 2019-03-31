@@ -1,3 +1,4 @@
 enchantment.felling=Felling
+enchantment.felling.felling.desc=Cuts an entire tree down at once.
 felling.config.server=Server Side Settings
 felling.config.client=Client Side Settings
