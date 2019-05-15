@@ -162,7 +162,7 @@ public class FellingAlgorithm {
      * @return The list of paths matching the felling enchantment version.
      */
     private static EnumFacing[][] getPaths(ItemStack item) {
-        return fellingPaths[EnchantmentHelper.getEnchantmentLevel(Felling.felling, item) - 1];
+        return fellingPaths[Math.min(EnchantmentHelper.getEnchantmentLevel(Felling.felling, item), 3) - 1];
     }
 
     /**
